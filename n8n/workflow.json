@@ -1,1 +1,408 @@
-
+{
+  "name": "Assistente de Investimentos - RPA + IA",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "clientes",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1616,
+        48
+      ],
+      "id": "3c449c8b-c3b2-479a-a03b-646bac476a2e",
+      "name": "Webhook",
+      "webhookId": "67aadc2a-fc2b-44bc-8074-193679b042be"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.clientes",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1392,
+        48
+      ],
+      "id": "d34a8ea7-924d-47e1-9e50-8a63f23a51df",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const cliente = item.json;\n\n  const saldo = parseFloat(\n    cliente.saldo\n      .replace('R$', '')\n      .replace(/\\./g, '')\n      .replace(',', '.')\n      .trim()\n  );\n\n  return {\n    json: {\n      nome: cliente.nome,\n      email: cliente.email,\n      saldo: saldo,\n      perfil: cliente.perfil\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1168,
+        48
+      ],
+      "id": "c4749dc7-69aa-4b59-9463-aa15cea6548e",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.perfil }}",
+                    "rightValue": "Conservador",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "99a36f04-13e0-4266-ace4-26ed0064c01a"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "65686e7d-2911-4ee3-be03-b9cd930c925a",
+                    "leftValue": "={{ $json.perfil }}",
+                    "rightValue": "Moderado",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2b07cf2f-f7ab-4f36-bfe5-7cf8411b87e9",
+                    "leftValue": "={{ $json.perfil }}",
+                    "rightValue": "Arrojado",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": "={{ false }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -944,
+        32
+      ],
+      "id": "85e1e868-1a6c-40a9-ace5-6306e31281a1",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bb2b18b9-8472-4123-9c76-36f64aa66bd3",
+              "name": "recomendacao",
+              "value": "Investimentos de baixo risco, como Tesouro Direto e CDBs.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        -144
+      ],
+      "id": "695caccf-e11e-4ef9-9908-a818bc1dcba8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dda0eb2a-a640-4f76-a61a-e07f20b87a96",
+              "name": "recomendacao",
+              "value": "Diversificação entre renda fixa e investimentos de maior potencial de retorno.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        48
+      ],
+      "id": "6872afa5-9042-4900-a225-5a9b6bd3571e",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "eaeb85e4-0705-4c61-ade9-586112aaed03",
+              "name": "recomendacao",
+              "value": "Carteira diversificada com maior exposição a renda variável e potencial de retorno.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -496,
+        224
+      ],
+      "id": "82b09561-03c9-4320-b4ad-4981b61155c8",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -496,
+        -48
+      ],
+      "id": "e84b3769-8362-4408-b521-91951eaa0052",
+      "name": "Merge"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -272,
+        48
+      ],
+      "id": "80e634d6-409c-43c6-ab80-0e9e771accaf",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Você é um assistente financeiro virtual de alta performance. Escreva uma mensagem curta, amigável e muito profissional para o cliente abaixo, recomendando opções baseadas no perfil dele.\n\nDados do Cliente:\n- Nome: {{ $json.nome }}\n- Perfil: {{ $json.perfil }}\n- Saldo: R$ {{ $json.saldo }}\n\nBase de recomendação:\nUse a frase \"{{ $json.recomendacao }}\" como direcionamento técnico, mas escreva um texto novo, caloroso e humano. Comece saudando o cliente pelo nome.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -48,
+        48
+      ],
+      "id": "52197224-1817-483f-83ac-f517acd8bc6a",
+      "name": "AI Agent",
+      "executeOnce": true,
+      "retryOnFail": false,
+      "waitBetweenTries": 5000,
+      "maxTries": 4
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.8-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        272
+      ],
+      "id": "4352bd50-cd40-4abc-b9e3-936da2537d25",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CiqVPiCfniRS1ujH",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "770c0184-b6e0-418e-a3d9-a1f018ed72eb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5002738619110c9dd8cc224c3a6abba409cf4e0ad003267a17d93a8d6de49fc0"
+  },
+  "nodeGroups": [],
+  "id": "rn7dtHKDXkZMDj4r",
+  "tags": []
+}
